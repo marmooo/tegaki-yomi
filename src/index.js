@@ -113,12 +113,12 @@ function speak(text) {
   speechSynthesis.speak(msg);
 }
 
-function setTegakiPanel() {
+function setTegakiPanel(maxYomiLength) {
   while (tegakiPanel.firstChild) {
     tegakiPanel.removeChild(tegakiPanel.lastChild);
   }
   pads = [];
-  for (let i = 0; i < answerYomis[0].length; i++) {
+  for (let i = 0; i < maxYomiLength; i++) {
     // const box = document.createElement("tegaki-box");
     const box = createTegakiBox();
     tegakiPanel.appendChild(box);
@@ -218,14 +218,14 @@ function nextProblem() {
   const problem =
     problemCandidate.splice(getRandomInt(0, problemCandidate.length), 1)[0];
   const [kanji, yomis] = problem;
-  const yomiLength = yomis[getRandomInt(0, yomis.length)].length;
+  const maxYomiLength = Math.max(yomis.map((yomi) => yomi.length));
   answerKanji = kanji;
-  answerYomis = yomis.filter((yomi) => yomi.length == yomiLength);
+  answerYomis = yomis;
   hideAnswer();
   document.getElementById("problem").textContent = answerKanji;
   document.getElementById("answer").textContent = answerYomis.join(", ");
   document.getElementById("reply").textContent = "";
-  setTegakiPanel();
+  setTegakiPanel(maxYomiLength);
 }
 
 function initProblems() {
@@ -345,12 +345,12 @@ canvases.forEach((canvas) => {
 
 const worker = new Worker("worker.js");
 worker.addEventListener("message", (e) => {
-  const reply = showPredictResult(canvases[e.data.pos], e.data.result);
-  const formatedReply = kanaToHira(reply);
+  const replyText = showPredictResult(canvases[e.data.pos], e.data.result);
+  const formatedReply = kanaToHira(replyText).trim();
   if (answerYomis.includes(formatedReply)) {
     if (!hinted) correctCount += 1;
     playAudio(correctAudio);
-    document.getElementById("reply").textContent = "⭕ " + answerYomis;
+    document.getElementById("reply").textContent = "⭕ " + formatedReply;
     nextProblem();
   }
 });
