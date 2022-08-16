@@ -218,7 +218,7 @@ function nextProblem() {
   const problem =
     problemCandidate.splice(getRandomInt(0, problemCandidate.length), 1)[0];
   const [kanji, yomis] = problem;
-  const maxYomiLength = Math.max(yomis.map((yomi) => yomi.length));
+  const maxYomiLength = Math.max(...yomis.map((yomi) => yomi.length));
   answerKanji = kanji;
   answerYomis = yomis;
   hideAnswer();
