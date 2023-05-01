@@ -281,30 +281,26 @@ function initTime() {
   document.getElementById("time").textContent = gameTime;
 }
 
-customElements.define(
-  "tegaki-box",
-  class extends HTMLElement {
-    constructor() {
-      super();
-      const template = document.getElementById("tegaki-box").content.cloneNode(
-        true,
-      );
-      const canvas = template.querySelector("canvas");
-      const pad = initSignaturePad(canvas);
-      template.querySelector(".eraser").onclick = () => {
-        pad.clear();
-      };
-      pads.push(pad);
-      this.attachShadow({ mode: "open" }).appendChild(template);
-    }
-  },
-);
+class TegakiBox extends HTMLElement {
+  constructor() {
+    super();
+    const template = document.getElementById("tegaki-box")
+      .content.cloneNode(true);
+    const canvas = template.querySelector("canvas");
+    const pad = initSignaturePad(canvas);
+    template.querySelector(".eraser").onclick = () => {
+      pad.clear();
+    };
+    pads.push(pad);
+    this.attachShadow({ mode: "open" }).appendChild(template);
+  }
+}
+customElements.define("tegaki-box", TegakiBox);
 
 function createTegakiBox() {
   const div = document.createElement("div");
-  const template = document.getElementById("tegaki-box").content.cloneNode(
-    true,
-  );
+  const template = document.getElementById("tegaki-box")
+    .content.cloneNode(true);
   div.appendChild(template);
   const canvas = div.querySelector("canvas");
   const pad = initSignaturePad(canvas);
