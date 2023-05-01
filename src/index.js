@@ -11,8 +11,10 @@ let problemCandidate;
 let answerKanji = "漢字";
 let answerYomis = ["かんじ"];
 let correctCount = problemCount = 0;
-const canvasCache = document.createElement("canvas")
-  .getContext("2d", { willReadFrequently: true });
+const canvasCache = document.createElement("canvas").getContext("2d", {
+  alpha: false,
+  willReadFrequently: true,
+});
 const audioContext = new AudioContext();
 const audioBufferCache = {};
 loadAudio("end", "mp3/end.mp3");
