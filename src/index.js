@@ -107,7 +107,7 @@ function setTegakiPanel(maxYomiLength) {
   }
   pads = [];
   for (let i = 0; i < maxYomiLength; i++) {
-    // const box = document.createElement("tegaki-box");
+    // const box = new TegakiBox();
     const box = createTegakiBox();
     tegakiPanel.appendChild(box);
   }
