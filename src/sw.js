@@ -1,4 +1,4 @@
-var CACHE_NAME = "2023-06-24 10:16";
+var CACHE_NAME = "2023-07-06 00:25";
 var urlsToCache = [
   "/tegaki-yomi/",
   "/tegaki-yomi/index.js",
@@ -7,7 +7,6 @@ var urlsToCache = [
   "/tegaki-yomi/model/group1-shard1of1.bin",
   "/tegaki-yomi/mp3/correct3.mp3",
   "/tegaki-yomi/mp3/end.mp3",
-  "/tegaki-yomi/eraser.svg",
   "/tegaki-yomi/favicon/favicon.svg",
   "https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js",
 ];
