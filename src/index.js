@@ -7,7 +7,6 @@ const scorePanel = document.getElementById("scorePanel");
 const tegakiPanel = document.getElementById("tegakiPanel");
 let canvases = [...tegakiPanel.getElementsByTagName("canvas")];
 const gameTime = 180;
-let firstRun = true;
 let hinted = false;
 let pads = [];
 let problems = [];
@@ -191,7 +190,7 @@ function getImageData(drawElement) {
 function predict(canvas) {
   const imageData = getImageData(canvas);
   const pos = canvases.indexOf(canvas);
-  worker.postMessage({ imageData: imageData, pos: pos });
+  worker.postMessage({ imageData, pos });
 }
 
 function getRandomInt(min, max) {
@@ -265,7 +264,6 @@ function startGameTimer() {
 
 let countdownTimer;
 function countdown() {
-  if (firstRun) predict(canvases[0]);
   clearTimeout(countdownTimer);
   countPanel.classList.remove("d-none");
   infoPanel.classList.add("d-none");
@@ -371,20 +369,15 @@ canvases.forEach((canvas) => {
 
 const worker = new Worker("worker.js");
 worker.addEventListener("message", (event) => {
-  if (firstRun) {
-    firstRun = false;
-  } else {
-    const replyText = showPredictResult(
-      canvases[event.data.pos],
-      event.data.result,
-    );
-    const formatedReply = kanaToHira(replyText).trim();
-    if (answerYomis.includes(formatedReply)) {
-      if (!hinted) correctCount += 1;
-      playAudio("correct");
-      document.getElementById("reply").textContent = "⭕ " + formatedReply;
-      nextProblem();
-    }
+  const data = event.data;
+  if (pads[data.pos].toData().length == 0) return;
+  const replyText = showPredictResult(canvases[data.pos], data.result);
+  const formatedReply = kanaToHira(replyText).trim();
+  if (answerYomis.includes(formatedReply)) {
+    if (!hinted) correctCount += 1;
+    playAudio("correct");
+    document.getElementById("reply").textContent = "⭕ " + formatedReply;
+    nextProblem();
   }
 });
 
@@ -395,6 +388,9 @@ document.getElementById("restartButton").onclick = countdown;
 document.getElementById("startButton").onclick = countdown;
 document.getElementById("showAnswer").onclick = showAnswer;
 document.getElementById("gradeOption").onchange = initProblems;
+document.addEventListener("pointerdown", () => {
+  predict(canvases[0]);
+}, { once: true });
 document.addEventListener("click", unlockAudio, {
   once: true,
   useCapture: true,
