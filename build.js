@@ -8,7 +8,6 @@ async function getGradedWords(filePath, threshold) {
     .pipeThrough(new TextDecoderStream())
     .pipeThrough(new TextLineStream());
   for await (const line of lineStream) {
-    if (!line) continue;
     const arr = line.split(",");
     const word = arr[0];
     const count = parseInt(arr[1]);
@@ -41,7 +40,6 @@ async function build(threshold) {
     words = [...new Set(words)];
     for (const word of words) {
       let yomis = yomiDict.get(word);
-      if (!yomis) continue;
       yomis = yomis.filter((yomi) => yomi.at(-1) != "っ");
       if (yomis.length == 0) continue;
       const line = word + "\t" + yomis.join("|");
